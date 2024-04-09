@@ -59,6 +59,8 @@ double alavancaTime = 0;
 bool isBeeping = false;
 bool alavancaAcionada = false;
 
+int package_counter = 0;
+
 float initial_altitude;
 
 // import external files
@@ -207,7 +209,42 @@ void resetStructs() {
   soloData = { 0 }; // openParachute
 }
 
+String fixNumberSize(int num, int width){
+  String formattedString = String(num);
+  while (formattedString.length() < width){
+    formattedString = "0" + formattedString;
+  }
+  return formattedString;
+}
+
 void saveMessages() {
+  telemetry_message = telemetryMessage();
+  sd_message = sdMessage();
+  package_counter++;
+}
+
+String telemetryMessage(){
+  // Padráo da Mensagem:
+  // P -> Numeracao do Pacote
+  // A -> Altitude medida
+  // Z -> Acelecerao no eixo Z
+  // P -> Estado do Paraquedas
+  // T -> Latitude do GPS
+  // G -> Longitude do GPS
+  // PPPPP AAA.AAA ZZ.ZZ P TT.TTT GG.GGG
+  
+  String packetString = String(fixNumberSize(package_counter, 5))
+    + String(fixNumberSize((int) (allData.bmpData.altitude*1000), 6))
+    + String(fixNumberSize((int) (allData.imuData.accelZ*100), 4))
+    + String(allData.data.parachute);
+    
+  String gpsString = String(fixNumberSize((int) (allData.gpsData.latitude*1000), 5))
+    + String(fixNumberSize((int) (allData.gpsData.longitude*1000), 5));
+
+  return (packetString + gpsString);
+}
+
+String sdMessage(){
   String packetString = String(allData.data.time, 3)
     + "," + String(allData.bmpData.temperature, 2)
     + "," + String(allData.bmpData.pressure, 2)
@@ -218,7 +255,5 @@ void saveMessages() {
   String gpsString = String(allData.gpsData.latitude, 3)
     + "," + String(allData.gpsData.longitude, 3);
 
-  telemetry_message = packetString + ',' + gpsString;
-
-  sd_message = telemetry_message;
+  return (packetString + ',' + gpsString);
 }

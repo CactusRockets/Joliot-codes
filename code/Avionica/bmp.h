@@ -11,6 +11,25 @@ Adafruit_BMP3XX bmp;
 float maximumAltitudeValue = 0;
 float altitudeAtual = 0;
 
+void readBMP();
+void updateBMP();
+void setupBMP();
+double getAltitude();
+
+void readBMP() {
+  updateBMP();
+
+  allData.bmpData.temperature = bmp.temperature;
+  allData.bmpData.pressure = bmp.pressure;
+  allData.bmpData.altitude = getAltitude() - initial_altitude;
+
+  // Atualiza a altura máxima
+  if(allData.bmpData.altitude > maximumAltitudeValue) {
+    maximumAltitudeValue = allData.bmpData.altitude;
+  }
+}
+
+
 void updateBMP() {
   if (!bmp.performReading()) {
     println("Failed to read BMP");
@@ -36,18 +55,5 @@ void setupBMP() {
 
 double getAltitude() {
   return bmp.readAltitude(SEA_LOCAL_PRESSURE);
-}
-
-void readBMP() {
-  updateBMP();
-
-  allData.bmpData.temperature = bmp.temperature;
-  allData.bmpData.pressure = bmp.pressure;
-  allData.bmpData.altitude = getAltitude() - initial_altitude;
-
-  // Atualiza a altura máxima
-  if(allData.bmpData.altitude > maximumAltitudeValue) {
-    maximumAltitudeValue = allData.bmpData.altitude;
-  }
 }
 
