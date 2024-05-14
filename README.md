@@ -1,5 +1,5 @@
 
-# Códigos para a aviônica do foguete Joliat-200m
+# Códigos para a aviônica do foguete Joliat-1km
 
 ### Como usar
 
