@@ -18,13 +18,7 @@ double latitude = 0, longitude = 0;
 int ano, mes, dia, hora, minuto, segundo, centesimo;
 
 void setupGPS() {
-  if(GPS_WAY == 1) {
-    // Configuração inicial do GPS
-    GPSSerial.begin(9600, SERIAL_8N1, RX1_PIN, TX1_PIN);
-  } else if(GPS_WAY == 2) { 
-    //Configuração inicial do GPS
-    GPSSerial.begin(9600, SERIAL_8N1, RX1_PIN, TX1_PIN);
-  }
+  GPSSerial.begin(9600, SERIAL_8N1, RX1_PIN, TX1_PIN);
   while(!GPSSerial);
   println("GPS conectado!");
 }

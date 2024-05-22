@@ -10,8 +10,8 @@
 #define ENABLE_MPU true
 #define ENABLE_SKIBS false
 #define ENABLE_SD false
-#define ENABLE_TELEMETRY false
-#define ENABLE_GPS false
+#define ENABLE_TELEMETRY true
+#define ENABLE_GPS true
 
 #define ALAVANCA 26
 #define ALAVANCA_BEEP_TIME 300
@@ -209,11 +209,22 @@ void resetStructs() {
   soloData = { 0 }; // openParachute
 }
 
-String fixNumberSize(int num, int width){
-  String formattedString = String(num);
+String fixNumberSize(int num, int width, bool enableSignal=false){
+  int numPositive = (num >= 0 ? num : -num);
+  String formattedString = String(numPositive);
+
   while (formattedString.length() < width){
     formattedString = "0" + formattedString;
   }
+
+  if(!enableSignal) return formattedString;
+
+  if(num < 0) {
+    formattedString = "-" + formattedString;
+  } else {
+    formattedString = "+" + formattedString;
+  }
+
   return formattedString;
 }
 
@@ -225,21 +236,22 @@ void saveMessages() {
 
 String telemetryMessage(){
   // Padráo da Mensagem:
+  // S -> Sinal (pode ser "+" ou "-")
   // P -> Numeracao do Pacote
   // A -> Altitude medida
   // Z -> Acelecerao no eixo Z
   // P -> Estado do Paraquedas
   // T -> Latitude do GPS
   // G -> Longitude do GPS
-  // PPPPP AAA.AAA ZZ.ZZ P TT.TTT GG.GGG
+  // Ex.: PPPPPSAAAAAASZZZZPSTTTTTSGGGGG
   
-  String packetString = String(fixNumberSize(package_counter, 5))
-    + String(fixNumberSize((int) (allData.bmpData.altitude*1000), 6))
-    + String(fixNumberSize((int) (allData.imuData.accelZ*100), 4))
+  String packetString = fixNumberSize(package_counter, 5)
+    + fixNumberSize((int) (allData.bmpData.altitude*1000), 6, true)
+    + fixNumberSize((int) (allData.imuData.accelZ*100), 4, true)
     + String(allData.data.parachute);
     
-  String gpsString = String(fixNumberSize((int) (allData.gpsData.latitude*1000), 5))
-    + String(fixNumberSize((int) (allData.gpsData.longitude*1000), 5));
+  String gpsString = fixNumberSize((int) (allData.gpsData.latitude*1000), 5, true)
+    + fixNumberSize((int) (allData.gpsData.longitude*1000), 5, true);
 
   return (packetString + gpsString);
 }
