@@ -31,6 +31,10 @@ struct ImuData {
   float accelX;
   float accelY;
   float accelZ;
+  float quaternion_w;
+  float quaternion_x;
+  float quaternion_y;
+  float quaternion_z;
 };
 
 struct GpsData {

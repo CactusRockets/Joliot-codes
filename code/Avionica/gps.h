@@ -5,8 +5,8 @@
 #define GPS_WAY 1
 
 // Pinos da Serial 1 do ESP32
-#define RX1_PIN 15 // analisa isso depois
-#define TX1_PIN 4  // analisa isso depois
+#define RX1_PIN 15
+#define TX1_PIN 4
 
 // Usando a Serial 1 do ESP32
 HardwareSerial GPSSerial(1);
@@ -62,6 +62,8 @@ void getGPSData() {
   while(GPSSerial.available() > 0) {
     char GPSData = GPSSerial.read();
     isNewGPSData = gps.encode(GPSData);
+
+    Serial.println("Dados de GPS recebidos!");
   }
 
   if(isNewGPSData) {

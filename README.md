@@ -12,3 +12,6 @@ Uma vez configurado, instale as seguintes bibliotecas:
 - Biblioteca X (versão X.X.X)
 - ...
 
+### Mudanças no Eagle
+
+- Conexões serial do GPS
