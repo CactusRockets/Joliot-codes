@@ -3,10 +3,10 @@
 /* CONFIGURAÇÕES LORA */
 
 // Pinos da Serial 2 do ESP32
-#define RX2_PIN 16 // invertido também
-#define TX2_PIN 17 // invertido também
-#define M0 32 // ok
-#define M1 33 // ok
+#define RX2_PIN 16
+#define TX2_PIN 17
+#define M0 32
+#define M1 33
 
 #define LORA_STRING_METHOD 1
 #define LORA_STRUCT_METHOD 2
