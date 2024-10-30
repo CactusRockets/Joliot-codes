@@ -13,9 +13,6 @@
 #define ENABLE_TELEMETRY true
 #define ENABLE_GPS false
 
-#define ALAVANCA 26
-#define ALAVANCA_BEEP_TIME 300
-
 struct AvionicData {
   float time;
   int parachute;
@@ -60,9 +57,7 @@ String telemetry_message = "";
 String sd_message = "";
 String solo_message = "";
 
-double alavancaTime = 0;
 bool isBeeping = false;
-bool alavancaAcionada = false;
 
 int package_counter = 0;
 
@@ -109,100 +104,30 @@ void setup() {
 }
 
 void loop() {
-  // if(digitalRead(ALAVANCA) == HIGH) {
-  if(true) {
-    if(alavancaAcionada == false) {
-      initial_altitude = getAltitude();
-      alavancaAcionada = true;
-    }
+  getSensorsMeasures();
 
-    getSensorsMeasures();
+  // beepIntermitating();
 
-    beepIntermitating();
+  // Armazena o tempo de execução
+  allData.data.time = millis() / 1000.0;
 
-    // Armazena o tempo de execução
-    allData.data.time = millis() / 1000.0;
+  checkApogee();
+  saveMessages();
 
-    checkApogee();
-    saveMessages();
+  println(telemetry_message);
 
-    println(telemetry_message);
-
-    if(ENABLE_SD) {
-      writeOnSD(sd_message);
-    }
-
-    if(ENABLE_TELEMETRY) {
-      transmit();
-      if(hasSoloMessage()) {
-        receive();
-      }
-    }
-
-    delay(500);
-  }
-}
-
-void setupComponents() {
-  pinMode(ALAVANCA, INPUT);
-
-  if(ENABLE_BUZZER) {
-    setupBuzzer();
+  if(ENABLE_SD) {
+    writeOnSD(sd_message);
   }
 
   if(ENABLE_TELEMETRY) {
-    setupTelemetry();
-  }
-
-  if(ENABLE_SD) {
-    setupSd();
-  }
-
-  if(ENABLE_MPU) {
-    setupMPU();
-  }
-  
-  if(ENABLE_BMP) {
-    setupBMP();
-  }
-
-  if(ENABLE_SKIBS) {
-    setupSkibPins();
-  }
-
-  if(ENABLE_GPS) {
-    setupGPS();
-  }
-}
-
-void getSensorsMeasures() {
-  // Medições BMP390
-  if(ENABLE_BMP) {
-    readBMP();
-  }
-
-  // Medições MPU6050
-  if(ENABLE_MPU) {
-    readMPU();
-  }
-
-  //Medições GPS
-  if(ENABLE_GPS) {
-    updateGPSData();
-  }
-}
-
-void beepIntermitating() {
-  if(millis() - alavancaTime >= ALAVANCA_BEEP_TIME) {
-    alavancaTime = millis();
-    isBeeping = !isBeeping;
-    
-    if(isBeeping) {
-      activateBuzzer();
-    } else {
-      desactivateBuzzer();
+    transmit();
+    if(hasSoloMessage()) {
+      receive();
     }
   }
+
+  delay(500);
 }
 
 void resetStructs() {
