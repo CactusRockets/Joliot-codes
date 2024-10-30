@@ -50,6 +50,12 @@ void setupBMP() {
   bmp.setOutputDataRate(BMP3_ODR_0_1_HZ);
 
   delay(200);
+
+  int i = 0;
+  while(i++ < 10) {
+    initial_altitude = getAltitude();
+  }
+
   updateBMP();
 }
 
