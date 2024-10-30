@@ -5,13 +5,13 @@
 #include <Wire.h>
 
 #define ENABLE_SERIAL true
-#define ENABLE_BUZZER false
+#define ENABLE_BUZZER true
 #define ENABLE_BMP true
 #define ENABLE_MPU true
 #define ENABLE_SKIBS false
 #define ENABLE_SD false
 #define ENABLE_TELEMETRY true
-#define ENABLE_GPS true
+#define ENABLE_GPS false
 
 #define ALAVANCA 26
 #define ALAVANCA_BEEP_TIME 300
@@ -42,6 +42,7 @@ struct PacketData {
   BmpData bmpData;
   ImuData imuData;
   GpsData gpsData;
+  int parachute;
 };
 
 struct SoloData {
@@ -98,6 +99,7 @@ void setup() {
 
   // Zera todos os valores
   resetStructs();
+  tripleBuzzerBip();
 
   delay(1000);
 }
