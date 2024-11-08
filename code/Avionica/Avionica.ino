@@ -1,30 +1,35 @@
-// Avionica 1Km
+// Projeto Joliot - Avionica 1Km
 
 // import support libraries
 #include <SPI.h>
 #include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BMP3XX.h>
 
 #define ENABLE_SERIAL true
-#define ENABLE_BUZZER true
-#define ENABLE_BMP true
-#define ENABLE_MPU true
+#define ENABLE_BUZZER false
+#define ENABLE_BMP false
+#define ENABLE_MPU false
 #define ENABLE_SKIBS false
 #define ENABLE_SD false
 #define ENABLE_TELEMETRY true
 #define ENABLE_GPS false
 
-struct AvionicData {
+struct AvionicData
+{
   float time;
   int parachute;
 };
 
-struct BmpData {
+struct BmpData
+{
   float temperature;
   float pressure;
   float altitude;
 };
 
-struct ImuData {
+struct ImuData
+{
   float accelX;
   float accelY;
   float accelZ;
@@ -34,11 +39,15 @@ struct ImuData {
   float quaternion_z;
 };
 
-struct GpsData {
+struct GpsData
+{
+  String date;
+  String hour;
   double latitude, longitude;
 };
 
-struct PacketData {
+struct PacketData
+{
   AvionicData data;
   BmpData bmpData;
   ImuData imuData;
@@ -46,7 +55,8 @@ struct PacketData {
   int parachute;
 };
 
-struct SoloData {
+struct SoloData
+{
   int openParachute;
 };
 
@@ -63,15 +73,18 @@ int package_counter = 0;
 
 float initial_altitude;
 
-// import external files
-#include "serial.h"     // debug prints
-#include "buzzer.h"     // sinal sonoro
-#include "telemetry.h"  // telemetria
-#include "moduleSD.h"   // armazenamento SD
-#include "bmp.h"        // barometro
-#include "imu.h"        // acelerometro
-#include "gps.h"        // localizacao gps
-#include "parachute.h"  // ativacao paraquedas
+// import external filess
+#include "serial.h"    // debug prints
+#include "buzzer.h"    // sinal sonoro
+#include "telemetry.h" // telemetria
+#include "moduleSD.h"  // armazenamento SD
+#include "bmp.h"       // barometro
+#include "imu.h"       // acelerometro
+#include "gps.h"       // localizacao gps
+#include "parachute.h" // ativacao paraquedas
+#include "setup.h"
+#include "debug.h"
+#include "messages.h"
 
 void setupComponents();
 void getSensorsMeasures();
@@ -81,7 +94,8 @@ void resetStructs();
 void checkApogee();
 void saveMessages();
 
-void setup() {
+void setup()
+{
   // Inicializa biblioteca I2C
   Wire.begin();
   Wire.setClock(400000);
@@ -96,17 +110,18 @@ void setup() {
   // Inicializa sensores e configura pinos
   setupComponents();
 
-  // Zera todos os valores
+  // Inicializa as variáveis
+  getInitialAltitude();
   resetStructs();
   tripleBuzzerBip();
 
   delay(1000);
 }
 
-void loop() {
+void loop()
+{
   getSensorsMeasures();
-
-  // beepIntermitating();
+  Serial.println("IsDropping: " + String(isDropping));
 
   // Armazena o tempo de execução
   allData.data.time = millis() / 1000.0;
@@ -115,88 +130,21 @@ void loop() {
   saveMessages();
 
   println(telemetry_message);
+  debugTelemetryMessage(telemetry_message);
 
-  if(ENABLE_SD) {
+  if (ENABLE_SD)
+  {
     writeOnSD(sd_message);
   }
 
-  if(ENABLE_TELEMETRY) {
+  if (ENABLE_TELEMETRY)
+  {
     transmit();
-    if(hasSoloMessage()) {
+    if (hasSoloMessage())
+    {
       receive();
     }
   }
 
   delay(500);
-}
-
-void resetStructs() {
-  allData = {
-    { 0,0 },        // time, parachute
-    { 0,0,0 },      // temperature, pressure, altitude
-    { 0,0,0 },      // accX, accY, accZ
-    { 0,0 }         // latitude, longitude
-  };
-  soloData = { 0 }; // openParachute
-}
-
-String fixNumberSize(int num, int width, bool enableSignal=false){
-  int numPositive = (num >= 0 ? num : -num);
-  String formattedString = String(numPositive);
-
-  while (formattedString.length() < width){
-    formattedString = "0" + formattedString;
-  }
-
-  if(!enableSignal) return formattedString;
-
-  if(num < 0) {
-    formattedString = "-" + formattedString;
-  } else {
-    formattedString = "+" + formattedString;
-  }
-
-  return formattedString;
-}
-
-void saveMessages() {
-  telemetry_message = telemetryMessage();
-  sd_message = sdMessage();
-  package_counter++;
-}
-
-String telemetryMessage(){
-  // Padráo da Mensagem:
-  // S -> Sinal (pode ser "+" ou "-")
-  // P -> Numeracao do Pacote
-  // A -> Altitude medida
-  // Z -> Acelecerao no eixo Z
-  // P -> Estado do Paraquedas
-  // T -> Latitude do GPS
-  // G -> Longitude do GPS
-  // Ex.: PPPPPSAAAAAASZZZZPSTTTTTSGGGGG
-  
-  String packetString = fixNumberSize(package_counter, 5)
-    + fixNumberSize((int) (allData.bmpData.altitude*1000), 6, true)
-    + fixNumberSize((int) (allData.imuData.accelZ*100), 4, true)
-    + String(allData.data.parachute);
-    
-  String gpsString = fixNumberSize((int) (allData.gpsData.latitude*1000), 5, true)
-    + fixNumberSize((int) (allData.gpsData.longitude*1000), 5, true);
-
-  return (packetString + gpsString);
-}
-
-String sdMessage(){
-  String packetString = String(allData.data.time, 3)
-    + "," + String(allData.bmpData.temperature, 2)
-    + "," + String(allData.bmpData.pressure, 2)
-    + "," + String(allData.bmpData.altitude, 3)
-    + "," + String(allData.imuData.accelZ)
-    + "," + String(allData.data.parachute);
-    
-  String gpsString = String(allData.gpsData.latitude, 3)
-    + "," + String(allData.gpsData.longitude, 3);
-
-  return (packetString + ',' + gpsString);
 }

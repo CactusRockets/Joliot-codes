@@ -38,7 +38,7 @@ void modoReceptor() {
 
 void modoTransmissor() {
   // Configurações para modo Transmissor
-  digitalWrite(M0, HIGH);
+  digitalWrite(M0, LOW);
   digitalWrite(M1, LOW);
 }
 
@@ -65,6 +65,8 @@ void receiveString() {
 
 void transmit() {
   if(LORA_WAY == LORA_STRING_METHOD) {
+    Serial.println("Transmitindo a mensagem de telemetria");
+    Serial.println(telemetry_message);
     transmitString(telemetry_message);
   } else if(LORA_WAY == LORA_STRUCT_METHOD) {
     transmitStruct(&allData);

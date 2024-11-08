@@ -44,3 +44,13 @@ void getSensorsMeasures() {
     updateGPSData();
   }
 }
+
+void resetStructs() {
+  allData = {
+    { 0,0 },        // time, parachute
+    { 0,0,0 },      // temperature, pressure, altitude
+    { 0,0,0 },      // accX, accY, accZ
+    { "", "", 0,0 }         // latitude, longitude
+  };
+  soloData = { 0 }; // openParachute
+}
