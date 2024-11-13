@@ -62,8 +62,6 @@ void getGPSData() {
   while(GPSSerial.available() > 0) {
     char GPSData = GPSSerial.read();
     isNewGPSData = gps.encode(GPSData);
-
-    Serial.println("Dados de GPS recebidos!");
   }
 
   if(isNewGPSData) {
@@ -88,9 +86,13 @@ void getGPSData() {
 }
 
 void saveGPSData() {
-  allData.gpsData = {
-    latitude, longitude
-  };
+  String date = String(dia) + "/" + String(mes) + "/" + String(ano);
+  String hour = String(hora) + ":" + String(minuto) + ":" + String(segundo); 
+
+  allData.gpsData.hour = hour;
+  allData.gpsData.date = date;
+  allData.gpsData.latitude = latitude;
+  allData.gpsData.longitude = longitude;
 }
 
 void printData() {
@@ -115,7 +117,5 @@ void updateGPSData() {
   } else if(GPS_WAY == 2) {
     getLatitudeAndLongitude();
   }
-  printData();
   saveGPSData();
 }
-
