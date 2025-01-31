@@ -5,11 +5,11 @@
 #define GPS_WAY 1
 
 // Pinos da Serial 1 do ESP32
-#define RX1_PIN 15
-#define TX1_PIN 4
+#define RX1_PIN 16
+#define TX1_PIN 17
 
 // Usando a Serial 1 do ESP32
-HardwareSerial GPSSerial(1);
+HardwareSerial GPSSerial(2);
 TinyGPSPlus gps;
 
 String gpsData;
@@ -17,16 +17,25 @@ String gpsData;
 double latitude = 0, longitude = 0;
 int ano, mes, dia, hora, minuto, segundo, centesimo;
 
+void verifyGPS() {
+  GPSSerial.begin(9600, SERIAL_8N1, RX1_PIN, TX1_PIN);
+  setupGPSFlag = !!GPSSerial;
+}
+
 void setupGPS() {
   GPSSerial.begin(9600, SERIAL_8N1, RX1_PIN, TX1_PIN);
-  while(!GPSSerial);
   println("GPS conectado!");
 }
 
 void getLatitudeAndLongitude() {
+
+  println("Sinais de GPS disponíveis: ");
+  println(GPSSerial.available());
+
   if(GPSSerial.available()) {
     // Lê os dados recebidos do módulo GPS
     gpsData = GPSSerial.readStringUntil('\n');
+    Serial.println(gpsData);
     
     // Verifica se os dados começam com "$GPGGA", que é 
     // uma sentença NMEA que contém as informações 
@@ -59,9 +68,14 @@ void getLatitudeAndLongitude() {
 void getGPSData() {
   bool isNewGPSData = false;
 
+  println("Sinais de GPS disponíveis: ");
+  println(GPSSerial.available());
+
   while(GPSSerial.available() > 0) {
     char GPSData = GPSSerial.read();
     isNewGPSData = gps.encode(GPSData);
+    println("isNewGPSData: ");
+    Serial.println(isNewGPSData);
   }
 
   if(isNewGPSData) {
@@ -114,8 +128,10 @@ void printData() {
 void updateGPSData() {
   if(GPS_WAY == 1) {
     getGPSData();
+    getLatitudeAndLongitude();
   } else if(GPS_WAY == 2) {
     getLatitudeAndLongitude();
   }
   saveGPSData();
+  printData();
 }

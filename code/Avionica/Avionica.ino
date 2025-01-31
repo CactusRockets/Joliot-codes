@@ -7,13 +7,13 @@
 #include <Adafruit_BMP3XX.h>
 
 #define ENABLE_SERIAL true
-#define ENABLE_BUZZER false
-#define ENABLE_BMP false
-#define ENABLE_MPU false
-#define ENABLE_SKIBS false
-#define ENABLE_SD false
-#define ENABLE_TELEMETRY true
-#define ENABLE_GPS false
+#define ENABLE_BUZZER true
+#define ENABLE_BMP true
+#define ENABLE_MPU true
+#define ENABLE_SKIBS true
+#define ENABLE_SD true
+#define ENABLE_TELEMETRY false
+#define ENABLE_GPS true
 
 struct AvionicData
 {
@@ -68,6 +68,11 @@ String sd_message = "";
 String solo_message = "";
 
 bool isBeeping = false;
+
+bool setupSDFlag = false;
+bool setupMPUFlag = false;
+bool setupBMPFlag = false;
+bool setupGPSFlag = false;
 
 int package_counter = 0;
 
@@ -134,7 +139,12 @@ void loop()
 
   if (ENABLE_SD)
   {
-    writeOnSD(sd_message);
+    verifySD();
+    if (setupSDFlag) {
+      writeOnSD(sd_message);
+    } else {
+      wrapperSetupSD();
+    }
   }
 
   if (ENABLE_TELEMETRY)
