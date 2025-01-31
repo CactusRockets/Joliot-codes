@@ -15,3 +15,4 @@ Uma vez configurado, instale as seguintes bibliotecas:
 ### Mudanças no Eagle
 
 - Conexões serial do GPS
+- Conexões serial do LoRa
