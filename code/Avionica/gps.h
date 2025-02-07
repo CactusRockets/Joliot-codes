@@ -23,7 +23,6 @@ void setupGPS() {
 void getGPSData() {
   while(true) {
     gps_available = gpsSerial.available();
-    // Serial.println(gps_available);
 
     if(gps_available <= 0) {
       break;
@@ -32,49 +31,38 @@ void getGPSData() {
     gps.encode(gpsSerial.read());
 
     // Se houver uma nova atualização de posição
-    if (gps.location.isUpdated()) {
+    if (gps.location.isValid()) {
         latitude = gps.location.lat();
         longitude = gps.location.lng();
-
-        // Serial.print("Latitude: ");
-        // Serial.print(gps.location.lat(), 6);
-        // Serial.print(" | Longitude: ");
-        // Serial.println(gps.location.lng(), 6);
+    } else {
+      Serial.println("Buscando localização GṔS");
     }
 
     // Se houver atualização da data
-    if (gps.date.isUpdated()) {
+    if (gps.date.isValid()) {
         dia = gps.date.day();
         mes = gps.date.month();
         ano = gps.date.year();
-
-        // Serial.print("Data: ");
-        // Serial.print(gps.date.day());
-        // Serial.print("/");
-        // Serial.print(gps.date.month());
-        // Serial.print("/");
-        // Serial.println(gps.date.year());
+    } else {
+      Serial.println("Buscando data do GṔS");
     }
 
+
     // Se houver atualização do horário
-    if (gps.time.isUpdated()) {
+    if (gps.time.isValid()) {
         hora = gps.time.hour();
         minuto = gps.time.minute();
         segundo = gps.time.second();
-
-        // Serial.print("Hora: ");
-        // Serial.print(gps.time.hour());
-        // Serial.print(":");
-        // Serial.print(gps.time.minute());
-        // Serial.print(":");
-        // Serial.println(gps.time.second());
+    } else {
+      Serial.println("Buscando tempo do GṔS");
     }
 
-    // Se houver atualização da velocidade
-    if (gps.speed.isUpdated()) {
-        // Serial.print("Velocidade (km/h): ");
-        // Serial.println(gps.speed.kmph());
-    }
+
+    // // Se houver atualização da velocidade
+    // if (gps.speed.isValid()) {
+    //     Serial.print("Velocidade (km/h): ");
+    //     Serial.println(gps.speed.kmph());
+    // }
   }
 }
 
@@ -107,5 +95,5 @@ void printData() {
 void updateGPSData() {
   getGPSData();
   saveGPSData();
-  printData();
+  // printData();
 }

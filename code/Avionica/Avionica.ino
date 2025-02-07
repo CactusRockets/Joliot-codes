@@ -7,13 +7,13 @@
 #include <Adafruit_BMP3XX.h>
 
 #define ENABLE_SERIAL true
-#define ENABLE_BUZZER false
-#define ENABLE_BMP false
-#define ENABLE_MPU false
-#define ENABLE_SKIBS false
+#define ENABLE_BUZZER true
+#define ENABLE_BMP true
+#define ENABLE_MPU true
+#define ENABLE_SKIBS true
 #define ENABLE_SD false
-#define ENABLE_TELEMETRY true
-#define ENABLE_GPS false
+#define ENABLE_TELEMETRY false
+#define ENABLE_GPS true
 
 struct AvionicData
 {
