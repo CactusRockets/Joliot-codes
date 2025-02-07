@@ -5,13 +5,12 @@
 
 File myFile;
 
+void verifySD() {
+  setupSDFlag = SD.begin(CS_SDPIN);
+}
+
 void setupSd() {
   println("Inicializando o cartão SD...");
-  
-  // verifica se o cartão SD não está presente ou não pode ser inicializado
-  while(!SD.begin(CS_SDPIN)) {
-    println("Falha, verifique se o cartão está presente.");
-  }
 
   // Cria arquivo data.txt e abre
   myFile = SD.open("/data.txt", FILE_APPEND);

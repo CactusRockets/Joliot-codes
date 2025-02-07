@@ -89,13 +89,12 @@ void calibrate() {
   Serial.println("Calibrado!");
 }
 
-void setupMPU() {
+void verifyMPU() {
   int err = IMU.init(calib, IMU_ADDRESS);
-  if (err != 0) {
-    Serial.print("Error initializing IMU: ");
-    Serial.println(err);
-    while (true);
-  }
+  setupMPUFlag = (err == 0);
+}
+
+void setupMPU() {
   Serial.println("MPU6050 conectado!");
 
   delay(500);
