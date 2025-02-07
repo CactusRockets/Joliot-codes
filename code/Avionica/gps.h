@@ -2,8 +2,8 @@
 #include <HardwareSerial.h>
 
 // Pinos da Serial 1 do ESP32
-#define RX1_PIN 16
-#define TX1_PIN 17
+#define RX1_PIN 15
+#define TX1_PIN 4
 
 TinyGPSPlus gps;
 // Usando a Serial 1 do ESP32
@@ -16,8 +16,8 @@ double latitude = 0, longitude = 0;
 int ano, mes, dia, hora, minuto, segundo;
 
 void verifyGPS() {
-  GPSSerial.begin(9600, SERIAL_8N1, RX1_PIN, TX1_PIN);
-  setupGPSFlag = !!GPSSerial;
+  gpsSerial.begin(9600, SERIAL_8N1, RX1_PIN, TX1_PIN);
+  setupGPSFlag = !!gpsSerial;
 }
 
 void setupGPS() {
@@ -102,3 +102,5 @@ void updateGPSData() {
   saveGPSData();
   // printData();
 }
+
+
