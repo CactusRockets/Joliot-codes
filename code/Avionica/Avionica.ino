@@ -15,6 +15,8 @@
 #define ENABLE_TELEMETRY true
 #define ENABLE_GPS true
 
+#define LED_ACTIVE 2
+
 struct AvionicData
 {
   float time;
@@ -112,6 +114,9 @@ void setup()
   getInitialAltitude();
   resetStructs();
   tripleBuzzerBip();
+
+  pinMode(LED_ACTIVE, OUTPUT);
+  digitalWrite(LED_ACTIVE, HIGH);
 
   delay(1000);
 }
