@@ -11,9 +11,11 @@
 #define ENABLE_BMP true
 #define ENABLE_MPU true
 #define ENABLE_SKIBS true
-#define ENABLE_SD false
-#define ENABLE_TELEMETRY false
+#define ENABLE_SD true
+#define ENABLE_TELEMETRY true
 #define ENABLE_GPS true
+
+#define LED_ACTIVE 2
 
 struct AvionicData
 {
@@ -78,15 +80,15 @@ int package_counter = 0;
 
 float initial_altitude;
 
-// import external filess
-#include "serial.h"    // debug prints
-#include "buzzer.h"    // sinal sonoro
-#include "telemetry.h" // telemetria
-#include "moduleSD.h"  // armazenamento SD
-#include "bmp.h"       // barometro
-#include "imu.h"       // acelerometro
-#include "gps.h"       // localizacao gps
-#include "parachute.h" // ativacao paraquedas
+// import external files
+#include "serial.h"
+#include "buzzer.h"
+#include "telemetry.h"
+#include "moduleSD.h"
+#include "bmp.h"
+#include "imu.h"
+#include "gps.h"
+#include "parachute.h"
 #include "setup.h"
 #include "debug.h"
 #include "messages.h"
@@ -99,43 +101,45 @@ void resetStructs();
 void checkApogee();
 void saveMessages();
 
+// Variáveis para controle de tempo
+unsigned long lastTelemetryTime = 0;
+const unsigned long telemetryInterval = 3000; // intervalo de 3 segundos
+
 void setup()
 {
-  // Inicializa biblioteca I2C
   Wire.begin();
   Wire.setClock(400000);
 
-  // Reserva espaço de memoria para as mensagens, aumentando a perfomance
   sd_message.reserve(1500);
   telemetry_message.reserve(1500);
 
-  // Inicializa a serial
   Serial.begin(115200);
 
-  // Inicializa sensores e configura pinos
   setupComponents();
-
-  // Inicializa as variáveis
   getInitialAltitude();
   resetStructs();
   tripleBuzzerBip();
+
+  pinMode(LED_ACTIVE, OUTPUT);
+  digitalWrite(LED_ACTIVE, HIGH);
 
   delay(1000);
 }
 
 void loop()
 {
+  int executionTime = millis() / 1000;
+
   getSensorsMeasures();
   // Serial.println("IsDropping: " + String(isDropping));
 
-  // Armazena o tempo de execução
   allData.data.time = millis() / 1000.0;
 
   checkApogee();
   saveMessages();
 
   println(telemetry_message);
-  debugTelemetryMessage(telemetry_message);
+  // debugTelemetryMessage(telemetry_message);
 
   if (ENABLE_SD)
   {
@@ -149,10 +153,17 @@ void loop()
 
   if (ENABLE_TELEMETRY)
   {
-    transmit();
-    if (hasSoloMessage())
+    unsigned long currentMillis = millis();
+    if (currentMillis - lastTelemetryTime >= telemetryInterval)
     {
-      receive();
+      lastTelemetryTime = currentMillis;
+
+      transmit();
+      if (hasSoloMessage())
+      {
+        receive();
+      }
     }
   }
+  delay(1200);
 }
