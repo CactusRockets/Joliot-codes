@@ -29,11 +29,11 @@ void getInitialAltitude() {
   }
 }
 
+void verifyBMP() {
+  setupBMPFlag = bmp.begin_I2C(BMP_ADDRESS);
+}
+
 void setupBMP() {
-  if(!bmp.begin_I2C(BMP_ADDRESS)) {
-    Serial.println("Failed to find BMP390 chip");
-    while(1);
-  }
   Serial.println("BMP390 conectado!");
 
   // bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_4X);

@@ -6,7 +6,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP3XX.h>
 
-#define ENABLE_SERIAL false
+#define ENABLE_SERIAL true
 #define ENABLE_BUZZER true
 #define ENABLE_BMP true
 #define ENABLE_MPU true
@@ -71,6 +71,11 @@ String solo_message = "";
 
 bool isBeeping = false;
 
+bool setupSDFlag = false;
+bool setupMPUFlag = false;
+bool setupBMPFlag = false;
+bool setupGPSFlag = false;
+
 int package_counter = 0;
 
 float initial_altitude;
@@ -126,7 +131,7 @@ void loop()
   int executionTime = millis() / 1000;
 
   getSensorsMeasures();
-  Serial.println("IsDropping: " + String(isDropping));
+  // Serial.println("IsDropping: " + String(isDropping));
 
   allData.data.time = millis() / 1000.0;
 
@@ -138,7 +143,12 @@ void loop()
 
   if (ENABLE_SD)
   {
-    writeOnSD(sd_message);
+    verifySD();
+    if (setupSDFlag) {
+      writeOnSD(sd_message);
+    } else {
+      wrapperSetupSD();
+    }
   }
 
   if (ENABLE_TELEMETRY)
@@ -155,6 +165,5 @@ void loop()
       }
     }
   }
-
   delay(1200);
 }
