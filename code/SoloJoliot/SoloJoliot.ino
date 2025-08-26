@@ -30,8 +30,8 @@ void loop()
 {
   // telemetry_message.clear();
 
-  Serial.println(LoRaSerial.available());
-  delay(500);
+  // Serial.println(LoRaSerial.available());
+  // delay(500);
 
   if (LoRaSerial.available() > 0)
   {
