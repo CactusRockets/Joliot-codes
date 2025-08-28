@@ -7,6 +7,7 @@
 #define TX2_PIN 17
 #define M0 21
 #define M1 22
+#define LED 4
 
 // Usando a Serial 2 do ESP32
 HardwareSerial LoRaSerial(2);
@@ -19,6 +20,7 @@ void modoReceptor()
   // Configurações para modo Receptor
   digitalWrite(M0, LOW);
   digitalWrite(M1, LOW);
+  digitalWrite(LED, HIGH);
 }
 
 void modoTransmissor()
@@ -33,6 +35,7 @@ void setupTelemetry()
 
   pinMode(M0, OUTPUT);
   pinMode(M1, OUTPUT);
+  pinMode(LED, OUTPUT);
   modoReceptor();
 
   // Configuração inicial do LoRa
