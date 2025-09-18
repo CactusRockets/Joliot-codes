@@ -18,69 +18,67 @@ HardwareSerial LoRaSerial(2);
 int sizeAllData = sizeof(allData);
 int sizeSoloData = sizeof(soloData);
 
-void setupTelemetry() {
-
+void setupTelemetry()
+{
+  // Modo de operação normal - transmite e recebe dados
   pinMode(M0, OUTPUT);
   pinMode(M1, OUTPUT);
 
-  //Configuração inicial do LoRa
+  // Configuração inicial do LoRa
   LoRaSerial.begin(9600, SERIAL_8N1, RX2_PIN, TX2_PIN);
-  while(!LoRaSerial);
+  while (!LoRaSerial)
+    ;
 
   println("LoRa conectado!");
 }
 
-void modoReceptor() {
-  // Configurações para modo Receptor
-  digitalWrite(M0, LOW);
-  digitalWrite(M1, LOW);
+void receiveStruct(SoloData *soloData)
+{
+  LoRaSerial.readBytes((char *)soloData, sizeSoloData);
 }
 
-void modoTransmissor() {
-  // Configurações para modo Transmissor
-  digitalWrite(M0, LOW);
-  digitalWrite(M1, LOW);
-}
-
-void transmitStruct(const PacketData* allData) {
-  modoTransmissor();
-  LoRaSerial.write((const char*)allData, sizeAllData);
-  println("\n\n");
-}
-
-void receiveStruct(SoloData *soloData) {
-  modoReceptor();
-  LoRaSerial.readBytes((char*)soloData, sizeSoloData);
-}
-
-void transmitString(String string) {
-  modoTransmissor();
+void transmitString(const String &string)
+{
   LoRaSerial.println(string);
 }
 
-void receiveString() {
-  modoReceptor();
+void receiveString()
+{
   solo_message = LoRaSerial.readStringUntil('\n');
 }
 
-void transmit() {
-  if(LORA_WAY == LORA_STRING_METHOD) {
+void transmit()
+{
+  if (LORA_WAY == LORA_STRING_METHOD)
+  {
     Serial.println("Transmitindo a mensagem de telemetria");
     Serial.println(telemetry_message);
     transmitString(telemetry_message);
-  } else if(LORA_WAY == LORA_STRUCT_METHOD) {
-    transmitStruct(&allData);
+    uint32_t start = micros();
+    LoRaSerial.flush();
+    uint32_t elapsed = micros() - start;
+
+    Serial.printf("Tempo de flush: %lu us\n", elapsed);
   }
+  // else if (LORA_WAY == LORA_STRUCT_METHOD)
+  // {
+  //   transmitStruct(&allData);
+  // }
 }
 
-void receive() {
-  if(LORA_WAY == LORA_STRING_METHOD) {
+void receive()
+{
+  if (LORA_WAY == LORA_STRING_METHOD)
+  {
     receiveString();
-  } else if(LORA_WAY == LORA_STRUCT_METHOD) {
+  }
+  else if (LORA_WAY == LORA_STRUCT_METHOD)
+  {
     receiveStruct(&soloData);
   }
 }
 
-bool hasSoloMessage() {
+bool hasSoloMessage()
+{
   return LoRaSerial.available() > 0;
 }

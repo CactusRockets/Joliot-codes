@@ -15,53 +15,53 @@ int gps_available;
 double latitude = 0, longitude = 0;
 int ano, mes, dia, hora, minuto, segundo;
 
-void verifyGPS() {
+void verifyGPS()
+{
   gpsSerial.begin(9600, SERIAL_8N1, RX1_PIN, TX1_PIN);
   setupGPSFlag = !!gpsSerial;
 }
 
-void setupGPS() {
+void setupGPS()
+{
   gpsSerial.begin(9600, SERIAL_8N1, RX1_PIN, TX1_PIN);
   println("GPS conectado!");
 }
 
-void getGPSData() {
-  while(true) {
+void getGPSData()
+{
+  while (true)
+  {
     gps_available = gpsSerial.available();
 
-    if(gps_available <= 0) {
+    if (gps_available <= 0)
+    {
       break;
     }
     // Processa os dados recebidos do GPS
     gps.encode(gpsSerial.read());
 
     // Se houver uma nova atualização de posição
-    if (gps.location.isValid()) {
-        latitude = gps.location.lat();
-        longitude = gps.location.lng();
-    } else {
-      Serial.println("Buscando localização GṔS");
+    if (gps.location.isValid())
+    {
+      latitude = gps.location.lat();
+      longitude = gps.location.lng();
     }
 
     // Se houver atualização da data
-    if (gps.date.isValid()) {
-        dia = gps.date.day();
-        mes = gps.date.month();
-        ano = gps.date.year();
-    } else {
-      Serial.println("Buscando data do GṔS");
+    if (gps.date.isValid())
+    {
+      dia = gps.date.day();
+      mes = gps.date.month();
+      ano = gps.date.year();
     }
-
 
     // Se houver atualização do horário
-    if (gps.time.isValid()) {
-        hora = gps.time.hour();
-        minuto = gps.time.minute();
-        segundo = gps.time.second();
-    } else {
-      Serial.println("Buscando tempo do GṔS");
+    if (gps.time.isValid())
+    {
+      hora = gps.time.hour();
+      minuto = gps.time.minute();
+      segundo = gps.time.second();
     }
-
 
     // // Se houver atualização da velocidade
     // if (gps.speed.isValid()) {
@@ -71,9 +71,10 @@ void getGPSData() {
   }
 }
 
-void saveGPSData() {
+void saveGPSData()
+{
   String date = String(dia) + "/" + String(mes) + "/" + String(ano);
-  String hour = String(hora) + ":" + String(minuto) + ":" + String(segundo); 
+  String hour = String(hora) + ":" + String(minuto) + ":" + String(segundo);
 
   allData.gpsData.hour = hour;
   allData.gpsData.date = date;
@@ -81,9 +82,10 @@ void saveGPSData() {
   allData.gpsData.longitude = longitude;
 }
 
-void printData() {
+void printData()
+{
   println(gpsData);
-  
+
   print("Latitude: ");
   println(latitude, 6);
   print("Longitude: ");
@@ -97,10 +99,9 @@ void printData() {
   println(ano);
 }
 
-void updateGPSData() {
+void updateGPSData()
+{
   getGPSData();
   saveGPSData();
   // printData();
 }
-
-
