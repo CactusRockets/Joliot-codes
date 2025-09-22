@@ -4,8 +4,8 @@
 #include <AsyncTCP.h>
 #include <ArduinoJson.h>
 
-const char *ssid = "BrenoNet";
-const char *password = "breno123";
+const char *ssid = "PNZ_NET - DANIEL";
+const char *password = "principedapaz";
 
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");

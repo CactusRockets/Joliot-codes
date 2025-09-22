@@ -155,6 +155,7 @@ void saveMessages();
 
 // Variáveis para controle de tempo
 unsigned long lastTelemetryTime = 0;
+
 const unsigned long telemetryInterval = 3000; // intervalo de 3 segundos
 void enterLORAConfigMode()
 {

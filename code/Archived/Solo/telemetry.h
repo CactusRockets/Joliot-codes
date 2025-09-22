@@ -5,8 +5,8 @@
 // Pinos da Serial 2 do ESP32
 #define RX2_PIN 16
 #define TX2_PIN 17
-#define M0 33 
-#define M1 32
+#define M0 22 
+#define M1 21
 
 // Usando a Serial 2 do ESP32
 HardwareSerial LoRaSerial(2);
