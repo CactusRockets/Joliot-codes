@@ -9,7 +9,7 @@
 #define HEIGHT_FOR_2_STAGE 3 
  
 // Em millisegundos 
-#define SKIB_TIME 1000 
+#define SKIB_TIME 3000 
  
 bool isDropping = false; 
 bool enoughHeight = true; 
@@ -70,7 +70,7 @@ bool altitudeLessThan(double altitude1, double altitude2) {
 void activateParachutes() { 
   if (parachute1Activated == false) { 
     activateStage1(); 
-    enoughHeight = altitudeLessThan(HEIGHT_FOR_2_STAGE, maximumAltitudeValue); 
+    enoughHeight = altitudeLessThan(HEIGHT_FOR_2_STAGE, highestAltitude); 
   } 
  
   if (parachute2Activated == false && parachute1Activated) { 
@@ -95,7 +95,7 @@ void activateParachutes() {
 } 
  
 bool checkIsDropping() { 
-  return altitudeLessThan(altitudeAtual, maximumAltitudeValue); 
+  return altitudeLessThan(altitudeAtual, highestAltitude); 
 } 
  
 void checkApogee() { 

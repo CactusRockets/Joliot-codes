@@ -8,7 +8,7 @@
 
 Adafruit_BMP3XX bmp;
 
-float maximumAltitudeValue = 0;
+float highestAltitude = 0;
 float altitudeAtual = 0;
 
 float initialAltitude = 0;
@@ -36,14 +36,9 @@ void verifyBMP() {
 void setupBMP() {
   Serial.println("BMP390 conectado!");
 
-  // bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_4X);
-  // bmp.setPressureOversampling(BMP3_OVERSAMPLING_8X);
-  // bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_31);
-  // bmp.setOutputDataRate(BMP3_ODR_0_1_HZ);
-
-  bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
-  bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
-  bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
+  bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_2X);
+  bmp.setPressureOversampling(BMP3_OVERSAMPLING_2X);
+  bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_1); // sem filtro
   bmp.setOutputDataRate(BMP3_ODR_50_HZ);
 
   delay(500);
@@ -60,8 +55,8 @@ void readBMP() {
   altitudeAtual = allData.bmpData.altitude;
 
   // Atualiza a altura máxima
-  if(altitudeAtual > maximumAltitudeValue) {
-    maximumAltitudeValue = altitudeAtual;
+  if(altitudeAtual > highestAltitude) {
+    highestAltitude = altitudeAtual;
   }
 }
 
