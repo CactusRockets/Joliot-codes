@@ -14,7 +14,7 @@ DataFlight data = DataFlight();
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Serial inicializada!");
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
