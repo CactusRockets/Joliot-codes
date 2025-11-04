@@ -52,8 +52,8 @@ public:
         parachute = message.substring(33, 34).toInt(); 
         skib1 = (parachute > 0);
         skib2 = (parachute > 1);
-        latitude = 0.001 * extractNumber(message.substring(34, 41), 6, true);
-        longitude = 0.001 * extractNumber(message.substring(41, 47), 6, true);
+        latitude = -0.0001 * extractNumber(message.substring(34, 40), 6);
+        longitude = -0.0001 * extractNumber(message.substring(40, 47), 6);
 
         // Valores default que precisam mudar no futuro
         velocity = 1;

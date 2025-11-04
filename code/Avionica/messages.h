@@ -35,8 +35,8 @@ String telemetryMessage()
       fixNumberSize((int)(allData.imuData.quaternion_y * 100), 3, true) + 
       fixNumberSize((int)(allData.imuData.quaternion_z * 100), 3, true) + 
       String(allData.parachute) + 
-      fixNumberSize((int)(allData.gpsData.latitude * 1000), 5, true) + 
-      fixNumberSize((int)(allData.gpsData.longitude * 1000), 5, true);
+      fixNumberSize((int)(allData.gpsData.latitude * 10000), 6) + 
+      fixNumberSize((int)(allData.gpsData.longitude * 10000), 6);
 
   Serial.println(result);
 

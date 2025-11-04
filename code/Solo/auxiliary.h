@@ -1,6 +1,6 @@
 int extractNumber(String numberText, int width, bool considerSignal = false)
 {
-    int slicePosition = 1;
+    int slicePosition = considerSignal ? 1 : 0;
     while (numberText[slicePosition] == '0' && slicePosition < width)
     {
         slicePosition++;
@@ -37,8 +37,8 @@ void debugMessage(String message)
     int parachute = message.substring(33, 34).toInt();
     bool skib1 = (parachute > 0) || skib1;
     bool skib2 = (parachute > 1) || skib2;
-    float latitude = 0.001 * extractNumber(message.substring(34, 41), 6, true);
-    float longitude = 0.001 * extractNumber(message.substring(41, 47), 6, true);
+    float latitude = -0.0001 * extractNumber(message.substring(34, 40), 6);
+    float longitude = -0.0001 * extractNumber(message.substring(41, 47), 6);
     float velocity = 1;
     float velocityX = 5;
     float velocityY = 10;
@@ -77,7 +77,7 @@ void debugMessageString(String message)
     String quaternionY = message.substring(25, 29);
     String quaternionZ = message.substring(29, 33);
     String parachute = message.substring(33, 34);
-    String latitude = message.substring(34, 41);
+    String latitude = message.substring(34, 40);
     String longitude = message.substring(41, 47);
 
     // Impressão das substrings para debug
