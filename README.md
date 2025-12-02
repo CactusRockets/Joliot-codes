@@ -1,18 +1,12 @@
+# Code for the Joliot Rocket Avionics
 
-# Códigos para a aviônica do foguete Joliat-1km
+### How to Use
 
-### Como usar
+To upload the code to the system, you must have the **Arduino IDE** installed on your computer, along with the **ESP32 board support package**.
 
-Para fazer upload do código no sistema, é necessário ter o ArduinoIDE instalado em seu computador juntamente com a instalação das placas ESP32.
+Once everything is configured, install the following libraries:
 
-Uma vez configurado, instale as seguintes bibliotecas:
-
-- Biblioteca X (versão X.X.X)
-- Biblioteca X (versão X.X.X)
-- Biblioteca X (versão X.X.X)
-- ...
-
-### Mudanças no Eagle
-
-- Conexões serial do GPS
-- Conexões serial do LoRa
+* Library X (version X.X.X)
+* Library X (version X.X.X)
+* Library X (version X.X.X)
+* ...
