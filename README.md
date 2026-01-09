@@ -1,7 +1,5 @@
 # 🚀 Firmware para aviônica do foguete Joliot
 
-# Arquitetura de Software
-
 O firmware do foguete Joliot foi desenvolvido em C++, utilizando o ambiente Arduino IDE, responsável pelo controle e pela operação do sistema de aviônica. Esse ambiente foi escolhido por disponibilizar bibliotecas consolidadas para comunicação com sensores, dispositivos de armazenamento e módulos de comunicação, além de facilitar o desenvolvimento, a depuração e a manutenção do código embarcado.
 
 O funcionamento geral do firmware implementado se baseia em duas fases: setup (onde são inicializados os sensores, definidas as configurações de saída/entrada dos pinos e inicializadas as variáveis para registro de dados) e loop (onde é realizada uma rotina periódica de captação, processamento, transmissão e registro de dados). A transição de um estado para o outro é marcada pelos três beeps do buzzer. Caso não ocorram, houve algum erro de inicialização dos sensores.
@@ -10,15 +8,21 @@ O funcionamento geral do firmware implementado se baseia em duas fases: setup (o
 <img width="1916" height="883" alt="image" src="https://github.com/user-attachments/assets/e227e519-3d78-429c-a432-9d62f9dfa3f3" />
 </p>
 
+Imagens da eletrônica do Joliot
+<p align="center">
+<img width="400" height="883" alt="image" src="https://github.com/user-attachments/assets/62ede18b-bd53-45a5-82f9-87401332e2ac" />
+<img width="400" height="883" alt="image" src="https://github.com/user-attachments/assets/a4dc1c1a-dc05-4d9b-9126-a09bbe39e2e7" />
+</p>
+
 Arquiteturalmente, o software está organizado nos seguintes arquivos:
 
-## 🧠 Avionica.ino
+### 🧠 Avionica.ino
 
 Arquivo principal do sistema. Define o fluxo de execução do `setup()` e do `loop()`.
 
 Não concentra lógica complexa: atua como **orquestrador**, chamando funções definidas nos demais módulos.
 
-### Funções
+**Funções**
 - **debugPacketData**  
   Apresenta todos os dados do sistema registrados no momento da chamada, com foco em debug.
 
@@ -28,17 +32,17 @@ Não concentra lógica complexa: atua como **orquestrador**, chamando funções 
 - **loop**  
   Executa continuamente a rotina do ciclo de vida do sistema.
 
-## 📐 bmp.h
+### 📐 bmp.h
 
 Módulo responsável pela inicialização e leitura de dados do sensor barométrico **BMP390**.
 
-### Responsabilidades
+**Responsabilidades**
 - Comunicação I2C com o sensor
 - Leitura de pressão, temperatura e altitude
 - Definição da altitude inicial de referência
 - Atualização do estado do sistema com dados atmosféricos
 
-### Funções
+**Funções**
 - **updateBMP**  
   Atualiza a leitura do BMP390.  
   Emite uma mensagem de erro caso nenhum valor válido seja obtido.
@@ -64,19 +68,19 @@ Módulo responsável pela inicialização e leitura de dados do sensor barométr
 
   Os dados são salvos nas variáveis de estado do sistema embarcado.
 
-## 🧭 imu.h
+### 🧭 imu.h
 
 Módulo responsável pela inicialização e leitura de dados do **IMU (MPU6050)**.
 
 O sensor combina **acelerômetro** e **giroscópio**, utilizando o conceito de **Quaternions** para determinar a orientação tridimensional do foguete.
 
-### Responsabilidades
+**Responsabilidades**
 - Comunicação com o MPU6050
 - Calibração do sensor
 - Leitura de aceleração e orientação
 - Conversão para sistema de ângulos Euler (Roll, Pitch, Yaw)
 
-### Funções
+**Funções**
 - **calibrate**  
   Realiza a calibração do sensor, exibindo mensagens de debug durante o processo.
 
@@ -91,16 +95,16 @@ O sensor combina **acelerômetro** e **giroscópio**, utilizando o conceito de *
   - Valores de aceleração nos eixos **X, Y e Z**
   - Ângulos de orientação no sistema **Euler / RPY** (Roll, Pitch, Yaw)
 
-## 🛰️ gps.h
+### 🛰️ gps.h
 
 Módulo responsável por inicializar e ler dados do módulo GPS (**NEO-6M**).
 
-### Responsabilidades
+**Responsabilidades**
 - Gerenciar a comunicação serial com o GPS
 - Interpretar dados de posição e tempo
 - Atualizar o estado global do sistema com informações do GPS
 
-### Funções
+**Funções**
 - **verifyGPS**  
   Configura uma variável de estado indicando se a comunicação com o GPS foi realizada com sucesso.
 
@@ -116,7 +120,7 @@ Módulo responsável por inicializar e ler dados do módulo GPS (**NEO-6M**).
 - **updateGPSData**  
   Função orquestradora do módulo GPS: lê os dados atuais e atualiza o estado do sistema.
 
-## 📨 messages.h
+### 📨 messages.h
 
 Módulo responsável por **parsing** e **serialização** dos dados do sistema, gerando mensagens para:
 - Registro no cartão SD
@@ -124,7 +128,7 @@ Módulo responsável por **parsing** e **serialização** dos dados do sistema, 
 
 > Em sessões posteriores, o formato e significado das mensagens serão detalhados.
 
-### Funções
+**Funções**
 - **fixNumberSize**  
   Ajusta o tamanho de um número adicionando zeros à esquerda para garantir `N` caracteres.  
   Exemplo:
@@ -135,11 +139,11 @@ Módulo responsável por **parsing** e **serialização** dos dados do sistema, 
 - **telemetryMessage**  
   Monta a mensagem de telemetria com **exatos 48 bytes**, organizando os dados relevantes do estado do sistema conforme o formato especificado.
 
-## 💾 moduleSD.h
+### 💾 moduleSD.h
 
 Responsável pela inicialização e escrita de dados no **cartão SD**.
 
-### Funções
+**Funções**
 - **verifySD**  
   Define uma variável de estado indicando se a comunicação com o SD foi bem-sucedida.
 
@@ -149,11 +153,11 @@ Responsável pela inicialização e escrita de dados no **cartão SD**.
 - **writeOnSD**  
 Escreve a string passada como parâmetro em uma nova linha do arquivo.
 
-## 📡 telemetry.h
+### 📡 telemetry.h
 
 Módulo responsável pela **transmissão e recepção de dados via LoRa**.
 
-### Funções
+**Funções**
 - **setupTelemetry**  
 Inicializa o módulo de telemetria e configura o canal serial.
 
@@ -175,11 +179,11 @@ Função orquestradora para recepção de dados via LoRa.
 - **hasSoloMessage**  
 Verifica se há mensagens recebidas disponíveis para leitura.
 
-## 🪂 parachute.h
+### 🪂 parachute.h
 
 Módulo que concentra **toda a lógica de acionamento dos paraquedas**.
 
-### Funções
+**Funções**
 - **setupSkibPins**  
 Configura os pinos dos SKIBs como saída.
 
@@ -207,11 +211,11 @@ Orquestra as ações a serem realizadas quando o apogeu é detectado.
 - **testActivations**  
 Código de teste para simular acionamentos sem variação de altitude.
 
-## 🔌 serial.h
+### 🔌 serial.h
 
 Arquivo de **funções de conveniência** que abstraem chamadas da porta serial.
 
-### Objetivo
+**Objetivo**
 Simplificar a sintaxe do código, permitindo chamadas como:
 
 ```cpp
@@ -224,13 +228,11 @@ ao invés de
 Serial.println("Hello");
 ```
 
----
-
-## 🔌 debug.h
+### 🔌 debug.h
 
 Concentra funções auxiliares para debug do estado atual do sistema.
 
-## 🔊 buzzer.h
+### 🔊 buzzer.h
 
 Módulo responsável pelo controle do buzzer, incluindo funções de acionamento e padrões sonoro
 
