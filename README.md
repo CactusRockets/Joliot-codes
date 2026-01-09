@@ -14,6 +14,12 @@ Imagens da eletrônica do Joliot
 <img width="400" height="883" alt="image" src="https://github.com/user-attachments/assets/a4dc1c1a-dc05-4d9b-9126-a09bbe39e2e7" />
 </p>
 
+Segue a lista de principais bibliotecas utilizadas no projeto e suas respectivas versões:
+- Adafruit BMP280 by Adafruit: 2.6.8
+- Adafruit BMP3XX by Adafruit: 2.1.2
+- Adafruit MPU6050 by Adafruit: 2.2.4
+- TinyGPSPlus by Mikal Hart: 1.0.3
+
 Arquiteturalmente, o software está organizado nos seguintes arquivos:
 
 ### 🧠 Avionica.ino
