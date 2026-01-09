@@ -10,6 +10,12 @@ O funcionamento geral do firmware implementado se baseia em duas fases: setup (o
 <img width="1916" height="883" alt="image" src="https://github.com/user-attachments/assets/e227e519-3d78-429c-a432-9d62f9dfa3f3" />
 </p>
 
+Segue a lista de principais bibliotecas utilizadas no projeto e suas respectivas versões:
+- Adafruit BMP280 by Adafruit: 2.6.8
+- Adafruit BMP3XX by Adafruit: 2.1.2
+- Adafruit MPU6050 by Adafruit: 2.2.4
+- TinyGPSPlus by Mikal Hart: 1.0.3
+
 Arquiteturalmente, o software está organizado nos seguintes arquivos:
 
 ## 🧠 Avionica.ino
