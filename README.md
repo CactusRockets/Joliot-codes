@@ -1,4 +1,4 @@
-# 🚀 Firmware para aviônica do foguete Joliot
+# Firmware para aviônica do foguete Joliot
 
 O firmware do foguete Joliot foi desenvolvido em C++, utilizando o ambiente Arduino IDE, responsável pelo controle e pela operação do sistema de aviônica. Esse ambiente foi escolhido por disponibilizar bibliotecas consolidadas para comunicação com sensores, dispositivos de armazenamento e módulos de comunicação, além de facilitar o desenvolvimento, a depuração e a manutenção do código embarcado.
 
@@ -22,7 +22,7 @@ Segue a lista de principais bibliotecas utilizadas no projeto e suas respectivas
 
 Arquiteturalmente, o software está organizado nos seguintes arquivos:
 
-### 🧠 Avionica.ino
+### Avionica.ino
 
 Arquivo principal do sistema. Define o fluxo de execução do `setup()` e do `loop()`.
 
@@ -38,7 +38,7 @@ Não concentra lógica complexa: atua como **orquestrador**, chamando funções 
 - **loop**  
   Executa continuamente a rotina do ciclo de vida do sistema.
 
-### 📐 bmp.h
+### bmp.h
 
 Módulo responsável pela inicialização e leitura de dados do sensor barométrico **BMP390**.
 
@@ -74,7 +74,7 @@ Módulo responsável pela inicialização e leitura de dados do sensor barométr
 
   Os dados são salvos nas variáveis de estado do sistema embarcado.
 
-### 🧭 imu.h
+### imu.h
 
 Módulo responsável pela inicialização e leitura de dados do **IMU (MPU6050)**.
 
@@ -101,7 +101,7 @@ O sensor combina **acelerômetro** e **giroscópio**, utilizando o conceito de *
   - Valores de aceleração nos eixos **X, Y e Z**
   - Ângulos de orientação no sistema **Euler / RPY** (Roll, Pitch, Yaw)
 
-### 🛰️ gps.h
+### gps.h
 
 Módulo responsável por inicializar e ler dados do módulo GPS (**NEO-6M**).
 
@@ -126,7 +126,7 @@ Módulo responsável por inicializar e ler dados do módulo GPS (**NEO-6M**).
 - **updateGPSData**  
   Função orquestradora do módulo GPS: lê os dados atuais e atualiza o estado do sistema.
 
-### 📨 messages.h
+### messages.h
 
 Módulo responsável por **parsing** e **serialização** dos dados do sistema, gerando mensagens para:
 - Registro no cartão SD
@@ -145,7 +145,7 @@ Módulo responsável por **parsing** e **serialização** dos dados do sistema, 
 - **telemetryMessage**  
   Monta a mensagem de telemetria com **exatos 48 bytes**, organizando os dados relevantes do estado do sistema conforme o formato especificado.
 
-### 💾 moduleSD.h
+### moduleSD.h
 
 Responsável pela inicialização e escrita de dados no **cartão SD**.
 
@@ -159,7 +159,7 @@ Responsável pela inicialização e escrita de dados no **cartão SD**.
 - **writeOnSD**  
 Escreve a string passada como parâmetro em uma nova linha do arquivo.
 
-### 📡 telemetry.h
+### telemetry.h
 
 Módulo responsável pela **transmissão e recepção de dados via LoRa**.
 
@@ -185,7 +185,7 @@ Função orquestradora para recepção de dados via LoRa.
 - **hasSoloMessage**  
 Verifica se há mensagens recebidas disponíveis para leitura.
 
-### 🪂 parachute.h
+### parachute.h
 
 Módulo que concentra **toda a lógica de acionamento dos paraquedas**.
 
@@ -217,7 +217,7 @@ Orquestra as ações a serem realizadas quando o apogeu é detectado.
 - **testActivations**  
 Código de teste para simular acionamentos sem variação de altitude.
 
-### 🔌 serial.h
+### serial.h
 
 Arquivo de **funções de conveniência** que abstraem chamadas da porta serial.
 
@@ -234,11 +234,11 @@ ao invés de
 Serial.println("Hello");
 ```
 
-### 🔌 debug.h
+### debug.h
 
 Concentra funções auxiliares para debug do estado atual do sistema.
 
-### 🔊 buzzer.h
+### buzzer.h
 
 Módulo responsável pelo controle do buzzer, incluindo funções de acionamento e padrões sonoro
 
